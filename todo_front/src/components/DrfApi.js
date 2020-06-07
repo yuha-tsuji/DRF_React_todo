@@ -44,6 +44,14 @@ const DrfApi = () => {
         }
     }
 
+    const deleteTodo = (id) => {
+        async function fetchDeleteTodo(id) {
+            await fetch(`http://localhost:8000/api/todos/${id}/`, {method: 'DELETE'})
+            setTodos(todos.filter(todo => todo.id !== id))
+        }
+        fetchDeleteTodo(id)
+    }
+
     const handleInputChange = () => e => {
         const value=e.target.value;
         const name = e.target.name
@@ -60,8 +68,9 @@ const DrfApi = () => {
             <ul>
                 {
                     todos.map(todo => 
-                    <li key={todo.id}>{todo.title}: {todo.content}</li>
-                    )
+                    <li key={todo.id}>{todo.title}: {todo.content}
+                    <button onClick={()=>deleteTodo(todo.id)}>Delete</button>
+                    </li>)
                 }
             </ul>
         </div>
