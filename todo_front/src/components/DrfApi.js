@@ -44,6 +44,28 @@ const DrfApi = () => {
         }
     }
 
+    const updateTodo = (editTodo) => {
+        const data = {
+            id: editTodo.id,
+            title: editTodo.title,
+            content: editTodo.content
+        }
+        async function fetchUpdateTodo(editTodo) {
+            const config = {
+                method: 'PUT',
+                headers: {
+                    "Content-type": "application/json;"
+                },
+                body: JSON.stringify(editTodo)
+            }
+            const res = await fetch(`http://localhost:8000/api/todos/${editTodo.id}/`, config)
+            const resJson = await res.json()
+            setTodos(todos.map(todo=>(todo.id === editTodo.id ? resJson : todo)))
+            setEditTodo({id:'', title:'', content:''})
+        }
+        fetchUpdateTodo(data)
+    }
+
     const deleteTodo = (id) => {
         async function fetchDeleteTodo(id) {
             await fetch(`http://localhost:8000/api/todos/${id}/`, {method: 'DELETE'})
@@ -64,12 +86,16 @@ const DrfApi = () => {
             <br /><br />
             <textarea name='content' placeholder='content' value={editTodo.content} onChange={handleInputChange()} required />
             <br /><br />
+            { editTodo.id ? 
+            <button onClick={()=>updateTodo(editTodo)}>Update</button> :
             <button onClick={()=>createNewTodo(editTodo)}>Create</button>
+            }
             <ul>
                 {
                     todos.map(todo => 
                     <li key={todo.id}>{todo.title}: {todo.content}
                     <button onClick={()=>deleteTodo(todo.id)}>Delete</button>
+                    <button onClick={()=>setEditTodo(todo)}>Update</button>
                     </li>)
                 }
             </ul>
