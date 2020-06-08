@@ -6,9 +6,8 @@ import DrfApi from './components/DrfApi';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <DrfApi />
-      </header>
+      <h1>Todo APP</h1>
+      <DrfApi />
     </div>
   );
 }

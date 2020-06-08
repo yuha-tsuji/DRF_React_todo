@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react'
+// import fetchTodoAPI from './asyncFuncton'
+import './css/DrfApi.css'
 
 const DrfApi = () => {
 
@@ -8,11 +10,15 @@ const DrfApi = () => {
     useEffect(() => {
         try {
             async function fetchTodoAPI(){
-                const res = await fetch("http://localhost:8000/api/todos/")
+                const config = {method: 'GET'} 
+                const res = await fetch("http://localhost:8000/api/todos/", config)
                 const todoJson = await res.json()
-                setTodos(todoJson)
+                const reverseTodo = todoJson.reverse()
+                setTodos(reverseTodo)
             }
             fetchTodoAPI()
+            // const response = fetchTodoAPI('GET', 'todos/')
+            // setTodos(response)
         } catch (e) {
             console.error(e)
         }
@@ -20,6 +26,7 @@ const DrfApi = () => {
 
     const createNewTodo = (todo) => {
         const data = {
+            id: todo.id,
             title: todo.title,
             content: todo.content
         }
@@ -28,7 +35,6 @@ const DrfApi = () => {
                 const config = {
                     method: 'POST',
                     headers: {
-                        'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data)
@@ -67,6 +73,7 @@ const DrfApi = () => {
     }
 
     const deleteTodo = (id) => {
+        alert("ほんとに消しますか？")
         async function fetchDeleteTodo(id) {
             await fetch(`http://localhost:8000/api/todos/${id}/`, {method: 'DELETE'})
             setTodos(todos.filter(todo => todo.id !== id))
@@ -82,23 +89,26 @@ const DrfApi = () => {
 
     return (
         <div>
-            <input type='text' name='title' placeholder='title' value={editTodo.title} onChange={handleInputChange()} required />
-            <br /><br />
-            <textarea name='content' placeholder='content' value={editTodo.content} onChange={handleInputChange()} required />
-            <br /><br />
-            { editTodo.id ? 
-            <button onClick={()=>updateTodo(editTodo)}>Update</button> :
-            <button onClick={()=>createNewTodo(editTodo)}>Create</button>
-            }
             <ul>
                 {
                     todos.map(todo => 
-                    <li key={todo.id}>{todo.title}: {todo.content}
-                    <button onClick={()=>deleteTodo(todo.id)}>Delete</button>
-                    <button onClick={()=>setEditTodo(todo)}>Update</button>
+                    <li key={todo.id} className='todo_list bg-dark'>{todo.created_at}<br />title: {todo.title}<br /> content: {todo.content}
+                    <br />
+                    <button onClick={()=>deleteTodo(todo.id)} className='btn btn-primary'>Delete</button>
+                    <button onClick={()=>setEditTodo(todo)} className='btn btn-primary'>Update</button>
                     </li>)
                 }
             </ul>
+            <div className='container'>
+                <input className='form-control' type='text' name='title' placeholder='title' value={editTodo.title} onChange={handleInputChange()} required />
+                <br />
+                <textarea className='form-control' name='content' placeholder='content' value={editTodo.content} onChange={handleInputChange()} required />
+                <br /><br />
+                { editTodo.id ? 
+                <button onClick={()=>updateTodo(editTodo)} className='btn btn-primary'>Update</button> :
+                <button onClick={()=>createNewTodo(editTodo)} className='btn btn-primary'>Create</button>
+                }
+            </div>
         </div>
     )
 }
