@@ -41,7 +41,7 @@ const DrfApi = () => {
                 }
                 const res = await fetch(`http://localhost:8000/api/todos/`, config)
                 const todoJson = await res.json()
-                setTodos([...todos, todoJson])
+                setTodos([todoJson, ...todos])
                 setEditTodo({id:'', title:'', content:''})
             }
             fetchCreateTodo(data)
@@ -89,16 +89,6 @@ const DrfApi = () => {
 
     return (
         <div>
-            <ul>
-                {
-                    todos.map(todo => 
-                    <li key={todo.id} className='todo_list bg-dark'>{todo.created_at}<br />title: {todo.title}<br /> content: {todo.content}
-                    <br />
-                    <button onClick={()=>deleteTodo(todo.id)} className='btn btn-primary'>Delete</button>
-                    <button onClick={()=>setEditTodo(todo)} className='btn btn-primary'>Update</button>
-                    </li>)
-                }
-            </ul>
             <div className='container'>
                 <input className='form-control' type='text' name='title' placeholder='title' value={editTodo.title} onChange={handleInputChange()} required />
                 <br />
@@ -109,6 +99,16 @@ const DrfApi = () => {
                 <button onClick={()=>createNewTodo(editTodo)} className='btn btn-primary'>Create</button>
                 }
             </div>
+            <ul>
+                {
+                    todos.map(todo => 
+                    <li key={todo.id} className='todo_list bg-dark'>{todo.created_at}<br />title: {todo.title}<br /> content: {todo.content}
+                    <br />
+                    <button onClick={()=>deleteTodo(todo.id)} className='btn btn-primary'>Delete</button>
+                    <button onClick={()=>setEditTodo(todo)} className='btn btn-primary'>Update</button>
+                    </li>)
+                }
+            </ul>
         </div>
     )
 }
