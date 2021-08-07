@@ -25,61 +25,56 @@ const DrfApi = () => {
     }, [])
 
     const createNewTodo = (todo) => {
-        const data = {
-            id: todo.id,
-            title: todo.title,
-            content: todo.content
-        }
         try {
-            async function fetchCreateTodo(data){
+            async function fetchCreateTodo(todo){
                 const config = {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(todo)
                 }
                 const res = await fetch(`http://localhost:8000/api/todos/`, config)
                 const todoJson = await res.json()
                 setTodos([todoJson, ...todos])
                 setEditTodo({id:'', title:'', content:''})
             }
-            fetchCreateTodo(data)
+            fetchCreateTodo(todo)
         } catch(e){
             console.error(e)
         }
     }
 
-    const updateTodo = (editTodo) => {
-        const data = {
-            id: editTodo.id,
-            title: editTodo.title,
-            content: editTodo.content
-        }
-        async function fetchUpdateTodo(editTodo) {
-            const config = {
-                method: 'PUT',
-                headers: {
-                    "Content-type": "application/json;"
-                },
-                body: JSON.stringify(editTodo)
-            }
-            const res = await fetch(`http://localhost:8000/api/todos/${editTodo.id}/`, config)
-            const resJson = await res.json()
-            setTodos(todos.map(todo=>(todo.id === editTodo.id ? resJson : todo)))
-            setEditTodo({id:'', title:'', content:''})
-        }
-        fetchUpdateTodo(data)
-    }
+    // const updateTodo = (editTodo) => {
+    //     const data = {
+    //         id: editTodo.id,
+    //         title: editTodo.title,
+    //         content: editTodo.content
+    //     }
+    //     async function fetchUpdateTodo(editTodo) {
+    //         const config = {
+    //             method: 'PUT',
+    //             headers: {
+    //                 "Content-type": "application/json;"
+    //             },
+    //             body: JSON.stringify(editTodo)
+    //         }
+    //         const res = await fetch(`http://localhost:8000/api/todos/${editTodo.id}/`, config)
+    //         const resJson = await res.json()
+    //         setTodos(todos.map(todo=>(todo.id === editTodo.id ? resJson : todo)))
+    //         setEditTodo({id:'', title:'', content:''})
+    //     }
+    //     fetchUpdateTodo(data)
+    // }
 
-    const deleteTodo = (id) => {
-        alert("ほんとに消しますか？")
-        async function fetchDeleteTodo(id) {
-            await fetch(`http://localhost:8000/api/todos/${id}/`, {method: 'DELETE'})
-            setTodos(todos.filter(todo => todo.id !== id))
-        }
-        fetchDeleteTodo(id)
-    }
+    // const deleteTodo = (id) => {
+    //     alert("ほんとに消しますか？")
+    //     async function fetchDeleteTodo(id) {
+    //         await fetch(`http://localhost:8000/api/todos/${id}/`, {method: 'DELETE'})
+    //         setTodos(todos.filter(todo => todo.id !== id))
+    //     }
+    //     fetchDeleteTodo(id)
+    // }
 
     const handleInputChange = () => e => {
         const value=e.target.value;
@@ -94,18 +89,18 @@ const DrfApi = () => {
                 <br />
                 <textarea className='form-control' name='content' placeholder='content' value={editTodo.content} onChange={handleInputChange()} required />
                 <br /><br />
-                { editTodo.id ? 
-                <button onClick={()=>updateTodo(editTodo)} className='btn btn-primary'>Update</button> :
+                {/* { editTodo.id ?  */}
+                {/* <button onClick={()=>updateTodo(editTodo)} className='btn btn-primary'>Update</button> : */}
                 <button onClick={()=>createNewTodo(editTodo)} className='btn btn-primary'>Create</button>
-                }
+                {/* } */}
             </div>
             <ul>
                 {
                     todos.map(todo => 
-                    <li key={todo.id} className='todo_list bg-dark'>{todo.created_at}<br />title: {todo.title}<br /> content: {todo.content}
+                    <li key={todo.id} className='todo_list bg-dark'>{ todo.updated_at ? todo.updated_at : todo.created_at}<br />title: {todo.title}<br /> content: {todo.content}
                     <br />
-                    <button onClick={()=>deleteTodo(todo.id)} className='btn btn-primary'>Delete</button>
-                    <button onClick={()=>setEditTodo(todo)} className='btn btn-primary'>Update</button>
+                    {/* <button onClick={()=>deleteTodo(todo.id)} className='btn btn-primary'>Delete</button>
+                    <button onClick={()=>setEditTodo(todo)} className='btn btn-primary'>Update</button> */}
                     </li>)
                 }
             </ul>
